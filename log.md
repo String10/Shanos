@@ -207,3 +207,13 @@ c
 1. 将 Func_ReadOneSector 函数段移动到 jmp short Label_Start 与 Label_Start 函数段之间，只作为函数调用，而不会被程序顺序执行；
 2. 将 reset floppy 部分注释掉，因为这部分代码对于引导的进行并没有起到任何作用，而且其中的 jmp $ 会令程序进入死循环中，无法进行 Loader 程序的加载；
 3. 作为保险，依旧将 fill zero... 部分放置在程序最后。
+
+## Day 3
+
+复习昨天的 FAT12 文件系统的具体实现流程。
+
+首先更正一个 BUG ，BS_OEMName 部分只能声明为一个长度为 8 的字符串，否则挂载镜像文件时无法检测文件系统类型。
+
+由于当前环境为 Windows 10 ，故书中指导的 mount 命令无法直接使用，经网络查找后无果。
+
+使用 ImDisk 将 boot.img 挂载在 img 文件夹下，直接将写好的 loader.bin 文件拷贝到 img 文件夹中，启动 bochs 虚拟机测试运行成功。
