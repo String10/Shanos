@@ -351,6 +351,8 @@ Label_Get_Mem_OK:
 	mov		bp,		GetMemStructOKMessage
 	int 	10h
 
+	jmp		Init_IDT
+
 ; 	jmp		Label_SET_SVGA_Mode_VESA_VBE
 
 ; [SECTION .s16lib]
@@ -453,6 +455,7 @@ IDT_POINTER:
 		dd		IDT
 
 ;=======	init IDT GDT goto protect mode
+Init_IDT:
 
 	cli		;======= close interrupt
 
@@ -549,16 +552,21 @@ GO_TO_TMP_Protect:
 	mov		cr0,	eax
 
 ;=======	sent an message before turn to kernel
-	mov 	ax, 	1301h
-	mov		bx, 	000fh
-	mov 	dx, 	0800h
-	mov 	cx, 	32
-	push	ax
-	mov 	ax, 	ds
-	mov		es, 	ax
-	pop		ax
-	mov 	bp, 	EnterKernelMessage
-	int 	10h
+	; mov 	ax, 	1301h
+	; mov		bx, 	000fh
+	; mov 	dx, 	0800h
+	; mov 	cx, 	32
+	; push	ax
+	; mov 	ax, 	ds
+	; mov		es, 	ax
+	; pop		ax
+	; mov 	bp, 	EnterKernelMessage
+	; int 	10h
+	; mov		ax,		0b800h
+	; mov 	gs,		ax
+	; mov		ah,		0fh		; 0000: Black Background	1111: White Foreground
+	; mov		al,		'o'
+	; mov		[gs:((80 * 0 + 40) * 2)], 	ax		; row 0, column 39
 
 	jmp		SelectorCode64:OffsetOfKernelFile
 
