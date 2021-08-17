@@ -254,3 +254,43 @@ Fatal error: no compiled in support for x86_64
 ```
 
 明天再解决这个问题吧，困了。
+
+## Day 7
+
+想到可以用 wsl 里面的工具来进行编译链接，毕竟怎么说人家也是一个 Linux 系统，果然成功进行了 as 那一条指令，但是新的问题又出现了。
+
+在编译 system 的时候终端报错：
+
+```shell
+ld -b elf64-x86-64 -o system head.o main.o -T kernel.lds
+
+ld: cannot open linker script file kernel.lds: No such file or directory
+```
+
+仔细阅读书上的指令，发现 kernel.lds 在第 8 章，抄下来之后发现这条指令也成功运行了。
+
+最后解决一个小问题：
+
+在运行 ld 指令时出现以下警告：
+
+```shell
+ld -b elf64-x86-64 -o system head.o main.o -T Kernel.lds
+
+ld: warning: cannot find entry symbol _start; defaulting to ffff800000100000
+```
+
+书中说标识符 _start 一定要用 .globl 修饰，否则就会出现这条警告（但是我明明已经加了）。
+
+上网查找资料，发现链接指令设置进程入口有多种方法，优先级按如下顺序：
+
+1.  ld 命令行的 -e 选项；
+2. 链接脚本的 ENTRY(SYMBOL) 命令；
+3. 如果定义了 start 符号，使用 start 符号值；
+4. 如果存在 .text section，使用 .text section 的第一字节的位置值；
+5. 使用 0 ；
+
+而 _start 标识符恰好应该在 .text section 的第一字节，所以我们无视这一条警告，视作编译链接成功。
+
+> 另外，由于编译链接后 head.S 文件内容会发生改变，故添加 head_backup.S 备份原内容。
+
+**然而**，在进入 Bochs 虚拟机查看 RIP 寄存器时，发现处理器并没有真正地进入内核程序，说明 boot-loader 部分仍存在问题，需要重新进行检查。

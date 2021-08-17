@@ -6,7 +6,7 @@ main.o:		main.c
 	gcc	-mcmodel=large -fno-builtin -m64 -c main.c
 
 system:		head.o main.o
-	ld -b elf64-x86-64 -o system head.o main.o -T kernel.lds
+	ld -b elf64-x86-64 -o system head.o main.o -T Kernel.lds
 
 all:	system
 	objcopy -I elf64-x86-64 -S -R ".eh_frame" -R ".comment" -O binary system kernel.bin
