@@ -351,86 +351,88 @@ Label_Get_Mem_OK:
 	mov		bp,		GetMemStructOKMessage
 	int 	10h
 
-	jmp		Init_IDT
+;	jmp		Init_IDT
 
-; 	jmp		Label_SET_SVGA_Mode_VESA_VBE
+	jmp		Label_SET_SVGA_Mode_VESA_VBE
 
-; [SECTION .s16lib]
-; [BITS 16]
-; ;======= 	display num in al
-; Label_DispAL:
+[SECTION .s16lib]
+[BITS 16]
+;======= 	display num in al
+Label_DispAL:
 
-; 	push 	ecx
-; 	push	edx
-; 	push	edi
+	push 	ecx
+	push	edx
+	push	edi
 
-; 	mov		edi,	[DisplayPosition]
-; 	mov		ah,		0fh
-; 	mov		dl,		al
-; 	shr		al,		4
-; 	mov		ecx,	2
-; .begin:
+	mov		edi,	[DisplayPosition]
+	mov		ah,		0fh
+	mov		dl,		al
+	shr		al,		4
+	mov		ecx,	2
+.begin:
 
-; 	and		al, 	0fh
-; 	cmp		al,		9
-; 	ja		.1
-; 	add		al,		'0'
-; 	jmp		.2
-; .1:
+	and		al, 	0fh
+	cmp		al,		9
+	ja		.1
+	add		al,		'0'
+	jmp		.2
+.1:
 
-; 	sub		al,		0ah
-; 	add		al,		'A'
-; .2:	
-; 	mov		[gs:edi], 	ax
-; 	add 	edi,	2
+	sub		al,		0ah
+	add		al,		'A'
+.2:	
+	mov		[gs:edi], 	ax
+	add 	edi,	2
 
-; 	mov		al,		dl
-; 	loop	.begin
+	mov		al,		dl
+	loop	.begin
 
-; 	mov		[DisplayPosition], 	edi
+	mov		[DisplayPosition], 	edi
 
-; 	pop		edi
-; 	pop		edx
-; 	pop		ecx
+	pop		edi
+	pop		edx
+	pop		ecx
 
-; 	ret
+	ret
 
-; ;=======	set the SVGA mode(VESA VBE)
-; Label_SET_SVGA_Mode_VESA_VBE:
+;=======	set the SVGA mode(VESA VBE)
+Label_SET_SVGA_Mode_VESA_VBE:
 
-; 	mov		ax,		4f02h
-; 	mov		bx,		4143h	;========================= mode : 0x180 or 0x143
-; 	int 	10h
+	mov		ax,		4f02h
+	mov		bx,		4143h	;========================= mode : 0x180 or 0x143
+	int 	10h
 
-; 	cmp		ax,		004fh
-; 	jnz		Label_SET_SVGA_Mode_VESA_VBE_FAIL
-; 	jmp 	Label_SET_SVGA_Mode_VESA_VBE_OK
+	cmp		ax,		004fh
+	jnz		Label_SET_SVGA_Mode_VESA_VBE_FAIL
+	jmp 	Label_SET_SVGA_Mode_VESA_VBE_OK
 
-; Label_SET_SVGA_Mode_VESA_VBE_FAIL:
-; 	mov		ax,		1301h
-; 	mov		bx,		008ch
-; 	mov 	dx,		0700h		;row 7
-; 	mov		cx,		18
-; 	push	ax
-; 	mov		ax,		ds
-; 	mov		es,		ax
-; 	pop		ax
-; 	mov		bp, 	SetSVGAModeErrMessage
-; 	int 	10h
+Label_SET_SVGA_Mode_VESA_VBE_FAIL:
+	mov		ax,		1301h
+	mov		bx,		008ch
+	mov 	dx,		0700h		;row 7
+	mov		cx,		18
+	push	ax
+	mov		ax,		ds
+	mov		es,		ax
+	pop		ax
+	mov		bp, 	SetSVGAModeErrMessage
+	int 	10h
 
-; 	jmp		$
+	jmp		$
 
-; Label_SET_SVGA_Mode_VESA_VBE_OK:
-; 	mov		ax,		1301h
-; 	mov		bx,		000fh
-; 	mov 	dx,		0800h		;row 8
-; 	mov		cx,		25
-; 	push	ax
-; 	mov		ax,		ds
-; 	mov		es,		ax
-; 	pop		ax
-; 	mov		bp,		SetSVGAModeOKMessage
-; 	int 	10h
+Label_SET_SVGA_Mode_VESA_VBE_OK:
+	mov		ax,		1301h
+	mov		bx,		000fh
+	mov 	dx,		0800h		;row 8
+	mov		cx,		25
+	push	ax
+	mov		ax,		ds
+	mov		es,		ax
+	pop		ax
+	mov		bp,		SetSVGAModeOKMessage
+	int 	10h
+
+	jmp 	Init_IDT
 
 [SECTION gdt]
 

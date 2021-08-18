@@ -285,7 +285,7 @@ ld: warning: cannot find entry symbol _start; defaulting to ffff800000100000
 
 1.  ld 命令行的 -e 选项；
 2. 链接脚本的 ENTRY(SYMBOL) 命令；
-3. 如果定义了 start 符号，使用 start 符号值；
+3. 如果定义了 _start 符号，使用 _start 符号值；
 4. 如果存在 .text section，使用 .text section 的第一字节的位置值；
 5. 使用 0 ；
 
@@ -294,3 +294,7 @@ ld: warning: cannot find entry symbol _start; defaulting to ffff800000100000
 > 另外，由于编译链接后 head.S 文件内容会发生改变，故添加 head_backup.S 备份原内容。
 
 **然而**，在进入 Bochs 虚拟机查看 RIP 寄存器时，发现处理器并没有真正地进入内核程序，说明 boot-loader 部分仍存在问题，需要重新进行检查。
+
+经过检查之后发现直到最后一条长跳转指令**都没有**出现错误，而长跳转指令后面跟着的指令并不是在 head.S 中的第一条指令 mov ax, 0x0010 ，而是另外一条位置指令，而就是这条指令使得 Bochs 虚拟机出现错误。
+
+猜测可能是之前执行 ld 指令时出现的那个警告导致的这个 Bug ，但是翻了半天也没有发现可以解决的办法，于是去 Stack Overflow 提问了一发，希望可以找到解决的办法。

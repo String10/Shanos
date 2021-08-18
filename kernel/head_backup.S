@@ -123,10 +123,10 @@ switch_seg:
 	.quad	entry64
 
 entry64:
-	movq	$0x10,	%rax
+	movq	$0x10,		%rax
 	mov		%rax,		%ds
 	mov		%rax,		%es
-	mov		%rax,		%fs
+	mov		%rax,		%gs
 	mov		%rax,		%ss
 	mov		$0xffff800000007e00,	%rsp 		/* rsp address */
 
@@ -136,12 +136,4 @@ entry64:
 	lretq
 
 go_to_kernel:
-	.quad	Start_Kerneladdress */
-
-	movq	go_to_kernel(%rip),		%rax		/* movq address */
-	pushq	$0x08
-	pushq	%rax
-	lretq
-
-go_to_kernel:
-	.quad	Start_Kernel
+	.quad	Start_Kerneladdress
