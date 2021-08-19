@@ -298,3 +298,47 @@ ld: warning: cannot find entry symbol _start; defaulting to ffff800000100000
 经过检查之后发现直到最后一条长跳转指令**都没有**出现错误，而长跳转指令后面跟着的指令并不是在 head.S 中的第一条指令 mov ax, 0x0010 ，而是另外一条位置指令，而就是这条指令使得 Bochs 虚拟机出现错误。
 
 猜测可能是之前执行 ld 指令时出现的那个警告导致的这个 Bug ，但是翻了半天也没有发现可以解决的办法，于是去 Stack Overflow 提问了一发，希望可以找到解决的办法。
+
+## Day 8
+
+今日可能无更新，来写一发刚才解决的关于 Github Desktop 的问题。
+
+当我进行 push 操作的时候 Github Desktop 总是报错，最开始是：
+
+> schannel: failed to receive handshake, SSL/TLS connection failed
+
+然后经过网上查找，在终端输入以下命令：
+
+```shell
+git config -- global http.sslBackend "openssl"
+```
+
+但是出现了新的报错：
+
+> Failed to connect to github.com port 443: Timed out
+
+在这期间尝试了关闭代理的方法，虽然没有效果，但是放一下相关指令：
+
+```shell
+git config --global --unset http.proxy
+git config --global --unset https.proxy
+```
+
+最后找到了一个可以解决问题的方法，需要修改在 C:\Windows\System32\drivers\etc 路径下的 host 文件。
+
+首先在这个查询 IP 地址的网站中找出下面三个网站的 IP 地址：
+
+> github.com 
+>
+> github.global.ssl.fastly.net 
+>
+> codeload.Github.com
+
+然后按照下面格式将文本插入到 host 文件中，Github Desktop （以及控制台中的） push 操作就可以正常使用了。
+
+> \# Added by StringMax for using Github
+>
+> 140.82.114.3 github.com
+> 199.232.69.194 github.global.ssl.fastly.net
+> 140.82.112.10 codeload.Github.com
+
